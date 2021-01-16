@@ -1,2 +1,12 @@
 # HearthstoneSdk
-.Net Core 5 library to work with Hearthstone API
+
+Blizzard provides APIs to work access Hearthstone cards, decks, metadata, etc.
+
+https://develop.battle.net/documentation/hearthstone/game-data-apis
+
+The aim of current project is creating .NET Core 5 library allowing to get all this information easily.
+
+
+# Getting Started
+
+https://develop.battle.net/documentation/guides/getting-started
