@@ -1,6 +1,6 @@
 # HearthstoneSdk
 
-Blizzard provides APIs to work access Hearthstone cards, decks, metadata, etc.
+Blizzard provides APIs to provide access to Hearthstone cards, decks, metadata, etc.
 
 https://develop.battle.net/documentation/hearthstone/game-data-apis
 
