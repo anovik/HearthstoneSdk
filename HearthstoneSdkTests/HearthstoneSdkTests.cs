@@ -1,0 +1,65 @@
+using HearthstoneSdk;
+using NUnit.Framework;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace HearthstoneSdkTests
+{
+    public class HearthstoneSdkTests
+    {
+        Hearthstone _sdk = new Hearthstone();
+
+        // !!!put your client id and client secret from Blizzard Developer portal here
+        //const string _clientId = "PUT_YOUR_CLIENT_ID_HERE";
+        //const string _clientSecret = "PUT_YOUR_CLIENT_SECRET_HERE";
+        const string _clientId = "PUT_YOUR_CLIENT_ID_HERE";
+        const string _clientSecret = "PUT_YOUR_CLIENT_SECRET_HERE";
+
+        string _accessToken;
+
+        [SetUp]
+        public async Task Setup()
+        {
+            _accessToken = await _sdk.GetAccessToken(Region.eu,_clientId, _clientSecret);
+        }      
+
+        [Test]
+        public async Task GetAccessTokenTest()
+        {            
+            string accessToken = await _sdk.GetAccessToken(Region.eu, _clientId, _clientSecret);
+            Assert.IsNotNull(accessToken);
+        }
+
+        [Test]
+        public async Task GetCardsTest()
+        {
+            List<Card> cards = await _sdk.GetCards(Region.eu, Locale.ru_RU, _accessToken);
+            Assert.IsNotNull(cards);
+            Assert.True(cards.Count > 0);
+        }
+
+        [Test]
+        public async Task GetCardByIdTest()
+        {
+            Card card = await _sdk.GetCardById(Region.eu, "52119-arch-villain-rafaam", Locale.ru_RU, _accessToken);
+            Assert.IsNotNull(card);
+            Assert.AreEqual(card.slug, "52119-arch-villain-rafaam");
+        }
+
+        [Test]
+        public async Task GetCardBackByIdTest()
+        {
+            CardBack cardBack = await _sdk.GetCardBackById(Region.eu, "155-pizza-stone", Locale.ru_RU, _accessToken);
+            Assert.IsNotNull(cardBack);
+            Assert.AreEqual(cardBack.slug, "155-pizza-stone");
+            Assert.IsNotNull(cardBack.image);
+        }
+
+        [Test]
+        public async Task GetMetadataTest()
+        {
+            string metadata = await _sdk.GetMetadata(Region.eu, Locale.ru_RU, _accessToken);
+            Assert.IsNotNull(metadata);
+        }
+    }
+}
