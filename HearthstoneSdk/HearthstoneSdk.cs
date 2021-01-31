@@ -90,7 +90,44 @@ namespace HearthstoneSdk
             string url = string.Format("https://{0}.api.blizzard.com/hearthstone/cardbacks/{1}?locale={2}&access_token={3}",
                               region, idorslug, locale, accessToken);
             string response = await GetResponseBodyByUrl(url);
-            CardBack card = JsonConvert.DeserializeObject<CardBack>(response);
+            CardBack cardBack = JsonConvert.DeserializeObject<CardBack>(response);
+            return cardBack;
+        }
+
+        public async Task<List<CardBack>> GetCardBacks(Region region,                                          
+                                          Locale locale,
+                                          string accessToken,
+                                          string cardBackCategory = "",
+                                          string textFilter = "",
+                                          string sort = "",
+                                          string order = ""
+                                          )
+        {
+            // TODO: implement filtering
+            string url = string.Format("https://{0}.api.blizzard.com/hearthstone/cardbacks?locale={1}&access_token={2}",
+                              region, locale, accessToken);
+            string response = await GetResponseBodyByUrl(url);
+            CardBacksCollection cardBacksCollection = JsonConvert.DeserializeObject<CardBacksCollection>(response);
+            if (cardBacksCollection != null)
+            {
+                return cardBacksCollection.cardbacks;
+            }
+            else
+            {
+                return new List<CardBack>();
+            }           
+        }
+
+        //https://us.api.blizzard.com/hearthstone/deck?locale=en_US&code=AAECAQcG%2Bwyd8AKS%2BAKggAOblAPanQMMS6IE%2Fweb8wLR9QKD%2BwKe%2BwKz%2FAL1gAOXlAOalAOSnwMA&access_token=USCXQL0qCdabbgXIAASEZ5LfK8aJT5brYh
+        public async Task<Deck> GetDeckByCode(Region region,                                           
+                                           Locale locale,
+                                           string code,
+                                           string accessToken)
+        {
+            string url = string.Format("https://{0}.api.blizzard.com/hearthstone/deck?locale={1}&code={2}&access_token={3}",
+                              region, locale, code, accessToken);
+            string response = await GetResponseBodyByUrl(url);
+            Deck card = JsonConvert.DeserializeObject<Deck>(response);
             return card;
         }
 
@@ -101,6 +138,18 @@ namespace HearthstoneSdk
         {
             string url = string.Format("https://{0}.api.blizzard.com/hearthstone/metadata?locale={1}&access_token={2}", 
                             region, locale, accessToken);
+            string response = await GetResponseBodyByUrl(url);
+            return response;
+        }
+
+        //https://us.api.blizzard.com/hearthstone/metadata/sets?locale=en_US&access_token=US0BGa5ZmrooCiI7444MSepywywJAZDCfq
+        public async Task<string> GetMetadataByType(Region region,
+                                                    Locale locale,
+                                                    MetadataType type,
+                                                    string accessToken)
+        {
+            string url = string.Format("https://{0}.api.blizzard.com/hearthstone/metadata/{1}?locale={2}&access_token={3}",
+                            region, type, locale, accessToken);
             string response = await GetResponseBodyByUrl(url);
             return response;
         }

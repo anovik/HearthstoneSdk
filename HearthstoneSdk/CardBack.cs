@@ -1,4 +1,6 @@
-﻿namespace HearthstoneSdk
+﻿using System.Collections.Generic;
+
+namespace HearthstoneSdk
 {
     public class CardBack
     {
@@ -7,5 +9,10 @@
         public string text { get; set; }
         public string image { get; set; }
         public string slug { get; set; }
+    }
+
+    public class CardBacksCollection
+    {
+        public List<CardBack> cardbacks { get; set; }
     }
 }

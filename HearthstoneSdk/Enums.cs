@@ -25,4 +25,21 @@
         zh_TW,
         zh_CN
     }
+
+    public enum GameMode
+    {
+        constructed,
+        battlegrounds
+    }
+
+    public enum MetadataType
+    {
+        sets, 
+        setGroups, 
+        types, 
+        rarities, 
+        classes, 
+        minionTypes, 
+        keywords
+    }
 }
