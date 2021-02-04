@@ -15,5 +15,7 @@ To start working with Hearthstone API directly or through HearthstoneSdk you nee
 
 To run HearthstoneSdkTests you need to insert your client id and client secret in the code:
 
+```csharp
 const string _clientId = "PUT_YOUR_CLIENT_ID_HERE";
 const string _clientSecret = "PUT_YOUR_CLIENT_SECRET_HERE";
+```
