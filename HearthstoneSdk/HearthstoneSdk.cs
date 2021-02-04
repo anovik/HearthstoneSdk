@@ -10,6 +10,8 @@ namespace HearthstoneSdk
 {
     public class Hearthstone
     {
+        private readonly HttpClient _client = new HttpClient();
+
         public Hearthstone()
         {
         }
@@ -19,31 +21,34 @@ namespace HearthstoneSdk
         public async Task<string> GetAccessToken(Region region,
                                                  string clientId, 
                                                  string clientSecret)
-        {
-            var client = new HttpClient();
-
-            // Create the HttpContent for the form to be posted.
+        {            
             var requestContent = new FormUrlEncodedContent(new[] {
                     new KeyValuePair<string, string>("grant_type", "client_credentials"),                    
                 });
 
-            client.DefaultRequestHeaders.Add("Authorization", "Basic " + 
+            _client.DefaultRequestHeaders.Add("Authorization", "Basic " + 
                 Convert.ToBase64String(Encoding.GetEncoding("ISO-8859-1").GetBytes(clientId + ":" + clientSecret)));
-
-            // Get the response.
-            HttpResponseMessage response = await client.PostAsync(
+            
+            HttpResponseMessage response = await _client.PostAsync(
                 string.Format("https://{0}.battle.net/oauth/token", region),
                 requestContent);
 
             string token = null;
             HttpContent responseContent = response.Content;
 
-            // Get the stream of the content.
-            using (var reader = new StreamReader(await responseContent.ReadAsStreamAsync()))
+            try
             {
-                string responseBody = await reader.ReadToEndAsync();
-                var dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(responseBody);
-                token = dict["access_token"];
+                using (var reader = new StreamReader(await responseContent.ReadAsStreamAsync()))
+                {
+                    string responseBody = await reader.ReadToEndAsync();
+                    var dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(responseBody);
+                    token = dict["access_token"];
+                }
+            }
+            finally
+            {
+                // anyway clear DefaultRequestHeaders
+                _client.DefaultRequestHeaders.Clear();                
             }
 
             return token;
@@ -155,10 +160,9 @@ namespace HearthstoneSdk
         }
 
         private async Task<string> GetResponseBodyByUrl(string url)
-        {
-            var client = new HttpClient();
+        {            
             
-            HttpResponseMessage response = await client.GetAsync(url);
+            HttpResponseMessage response = await _client.GetAsync(url);
 
             HttpContent responseContent = response.Content;
             
