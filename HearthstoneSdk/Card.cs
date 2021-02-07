@@ -22,11 +22,15 @@ namespace HearthstoneSdk
         public string flavorText { get; set; }
         public string cropImage { get; set; }
         public List<int> keywordIds { get; set; }
+        public Duels duels { get; set; }
     }
 
     public class CardsCollection
     {
         public List<Card> cards { get; set; }
+        public int cardCount { get; set; }
+        public int pageCount { get; set; }
+        public int page { get; set; }
     }
 
 }

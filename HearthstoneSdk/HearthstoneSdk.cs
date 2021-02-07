@@ -5,6 +5,7 @@ using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace HearthstoneSdk
 {
@@ -42,6 +43,7 @@ namespace HearthstoneSdk
                 {
                     string responseBody = await reader.ReadToEndAsync();
                     var dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(responseBody);
+                    // TODO: process possible errors here
                     token = dict["access_token"];
                 }
             }
@@ -55,7 +57,7 @@ namespace HearthstoneSdk
         }
 
         //https://us.api.blizzard.com/hearthstone/cards?locale=en_US&access_token=USeYa4TlSBPfeS37Ri6z1wKIFyAcZY48Oh
-        public async Task<List<Card>> GetCards(Region region,
+        public async Task<CardsCollection> GetCards(Region region,
                                                Locale locale,
                                                string accessToken)
         {
@@ -63,14 +65,35 @@ namespace HearthstoneSdk
                             region, locale, accessToken);
             string response = await GetResponseBodyByUrl(url);
             CardsCollection cardsCollection = JsonConvert.DeserializeObject<CardsCollection>(response);
-            if (cardsCollection != null)
-            {
-                return cardsCollection.cards;
-            }
-            else
-            {
-                return new List<Card>();
-            }
+            return cardsCollection;           
+        }
+        
+        //https://us.api.blizzard.com/hearthstone/cards?locale=en_US&set=rise-of-shadows&class=mage&manaCost=10&attack=4&health=10&collectible=1&rarity=legendary&type=minion&minionType=dragon&keyword=battlecry&textFilter=kalecgos&gameMode=constructed&page=1&pageSize=5&sort=name&order=desc&access_token=USFIZOMpbbZo4NFI9UC6RiPnQvbYGyyT4F
+        public async Task<CardsCollection> GetCards(Region region,
+                                               Locale locale,
+                                               string accessToken,
+                                               string set = "",
+                                               string classString = "",
+                                               List<int> manaCost = null,
+                                               List<int> attack = null,
+                                               List<int> health = null,
+                                               List<int> collectible = null,
+                                               string rarity = "",
+                                               string typeString = "",
+                                               string minionType = "",
+                                               string keyword = "",
+                                               string textFilter = "",
+                                               GameMode mode = GameMode.constructed,
+                                               int page = 1,
+                                               int pageSize = 10,
+                                               string sort = "",
+                                               string order = "")
+        {
+            string url = string.Format("https://{0}.api.blizzard.com/hearthstone/cards?locale={1}&access_token={2}",
+                            region, locale, accessToken);
+            string response = await GetResponseBodyByUrl(url);
+            CardsCollection cardsCollection = JsonConvert.DeserializeObject<CardsCollection>(response);
+            return cardsCollection;
         }
 
         //https://us.api.blizzard.com/hearthstone/cards/52119-arch-villain-rafaam?locale=en_US&access_token=USeYa4TlSBPfeS37Ri6z1wKIFyAcZY48Oh
@@ -99,7 +122,7 @@ namespace HearthstoneSdk
             return cardBack;
         }
 
-        public async Task<List<CardBack>> GetCardBacks(Region region,                                          
+        public async Task<CardBacksCollection> GetCardBacks(Region region,                                          
                                           Locale locale,
                                           string accessToken,
                                           string cardBackCategory = "",
@@ -113,14 +136,7 @@ namespace HearthstoneSdk
                               region, locale, accessToken);
             string response = await GetResponseBodyByUrl(url);
             CardBacksCollection cardBacksCollection = JsonConvert.DeserializeObject<CardBacksCollection>(response);
-            if (cardBacksCollection != null)
-            {
-                return cardBacksCollection.cardbacks;
-            }
-            else
-            {
-                return new List<CardBack>();
-            }           
+            return cardBacksCollection;
         }
 
         //https://us.api.blizzard.com/hearthstone/deck?locale=en_US&code=AAECAQcG%2Bwyd8AKS%2BAKggAOblAPanQMMS6IE%2Fweb8wLR9QKD%2BwKe%2BwKz%2FAL1gAOXlAOalAOSnwMA&access_token=USCXQL0qCdabbgXIAASEZ5LfK8aJT5brYh
@@ -131,6 +147,21 @@ namespace HearthstoneSdk
         {
             string url = string.Format("https://{0}.api.blizzard.com/hearthstone/deck?locale={1}&code={2}&access_token={3}",
                               region, locale, code, accessToken);
+            string response = await GetResponseBodyByUrl(url);
+            Deck card = JsonConvert.DeserializeObject<Deck>(response);
+            return card;
+        }
+
+        //https://us.api.blizzard.com/hearthstone/deck?locale=en_US&ids=2C55907%2C57416&hero=813&access_token=USK6UsLobuF5dMIxBsr6nFGeBt1iRRlZg3
+        public async Task<Deck> GetDeckByCardList(Region region,
+                                        Locale locale,
+                                        List<int> cardIds,
+                                        int heroId,
+                                        string accessToken)
+        {
+            var cardsList = HttpUtility.UrlEncode(string.Join<int>(",", cardIds));
+            string url = string.Format("https://{0}.api.blizzard.com/hearthstone/deck?locale={1}&ids={2}&hero={3}&access_token={4}",
+                              region, locale, cardsList, heroId, accessToken);
             string response = await GetResponseBodyByUrl(url);
             Deck card = JsonConvert.DeserializeObject<Deck>(response);
             return card;

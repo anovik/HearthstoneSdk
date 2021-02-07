@@ -14,5 +14,8 @@ namespace HearthstoneSdk
     public class CardBacksCollection
     {
         public List<CardBack> cardbacks { get; set; }
+        public int cardCount { get; set; }
+        public int pageCount { get; set; }
+        public int page { get; set; }
     }
 }

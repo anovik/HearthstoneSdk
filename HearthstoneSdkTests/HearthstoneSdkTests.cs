@@ -34,9 +34,39 @@ namespace HearthstoneSdkTests
         [Test]
         public async Task GetCardsTest()
         {
-            List<Card> cards = await _sdk.GetCards(Region.eu, Locale.ru_RU, _accessToken);
-            Assert.IsNotNull(cards);
-            Assert.True(cards.Count > 0);
+            var cardsCollection = await _sdk.GetCards(Region.eu, Locale.ru_RU, _accessToken);
+            Assert.IsNotNull(cardsCollection);
+            Assert.True(cardsCollection.cards.Count > 0);
+        }
+
+        [Test]
+        public async Task GetCardsSearchTest()
+        {
+           var cardsCollection = await _sdk.GetCards(region: Region.eu, 
+                                           locale: Locale.ru_RU,
+                                           accessToken: _accessToken,
+                                           set: "rise-of-shadows",
+                                           classString: "mage",
+                                           manaCost: new List<int> {10},
+                                           attack: new List<int> {4},
+                                           health: new List<int> {10},
+                                           collectible: new List<int> {1},
+                                           rarity: "legendary",
+                                           typeString: "minion",
+                                           minionType: "dragon",
+                                           keyword: "battlecry",
+                                           textFilter: "kalecgos",
+                                           pageSize: 5,
+                                           sort: "name",
+                                           order: "desc");
+            Assert.IsNotNull(cardsCollection);
+            Assert.True(cardsCollection.cards.Count == 1);
+        }
+
+        [Test]
+        public async Task GetCardsBattlegroundSearchTest()
+        {
+            //TODO: implement
         }
 
         [Test]
@@ -61,10 +91,19 @@ namespace HearthstoneSdkTests
         [Test]
         public async Task GetCardBacksTest()
         {
-            List<CardBack> cardBacks = await _sdk.GetCardBacks(Region.eu, 
+            var cardBacksCollection = await _sdk.GetCardBacks(Region.eu, 
                 Locale.ru_RU,_accessToken);
-            Assert.IsNotNull(cardBacks);            
-            Assert.True(cardBacks.Count > 0);
+            Assert.IsNotNull(cardBacksCollection);            
+            Assert.True(cardBacksCollection.cardbacks.Count > 0);
+        }
+
+        [Test]
+        public async Task GetCardBacksSearchTest()
+        {
+            var cardBacksCollection = await _sdk.GetCardBacks(Region.us,
+                Locale.en_US, _accessToken, textFilter: "hero");
+            Assert.IsNotNull(cardBacksCollection);
+            Assert.True(cardBacksCollection.cardbacks.Count > 0);
         }
 
         [Test]
@@ -75,6 +114,19 @@ namespace HearthstoneSdkTests
                 code, _accessToken);
             Assert.IsNotNull(deck);
             Assert.AreEqual(HttpUtility.UrlDecode(code), deck.deckCode);
+        }
+
+        [Test]
+        public async Task GetDeckByCardListTest()
+        {
+            int heroId = 813;
+            List<int> ids = new List<int> { 906, 1099, 1363, 1367, 46706, 48099, 48759, 49184, 50071, 50278, 51714, 52109, 52632, 52715, 53409, 53413, 53756,
+                53969, 54148, 54425, 54431, 54874, 54898, 54917, 55166, 55245, 55438, 55441, 55907, 57416 };
+            Deck deck = await _sdk.GetDeckByCardList(Region.eu, Locale.ru_RU,
+                ids, heroId, _accessToken);
+            Assert.IsNotNull(deck);
+            Assert.True(deck.cards.Count > 0);
+            Assert.AreEqual(deck.hero.id, heroId);            
         }
 
         [Test]

@@ -2,6 +2,12 @@
 
 namespace HearthstoneSdk
 {
+    public class Duels
+    {
+        public bool relevant { get; set; }
+        public bool constructed { get; set; }
+    }
+
     public class Hero
     {
         public int id { get; set; }
@@ -13,7 +19,7 @@ namespace HearthstoneSdk
         public int cardSetId { get; set; }
         public int rarityId { get; set; }
         public string artistName { get; set; }
-        public int health { get; set; }        
+        public int health { get; set; }
         public int manaCost { get; set; }
         public string name { get; set; }
         public string text { get; set; }
@@ -23,8 +29,7 @@ namespace HearthstoneSdk
         public string cropImage { get; set; }
         public List<int> keywordIds { get; set; }
         public List<int> childIds { get; set; }
-
-        // TODO: duels
+        public Duels duels { get; set; }
     }
 
     public class HeroPower
