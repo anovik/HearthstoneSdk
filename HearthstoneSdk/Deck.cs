@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace HearthstoneSdk
 {
@@ -7,6 +8,14 @@ namespace HearthstoneSdk
         public bool relevant { get; set; }
         public bool constructed { get; set; }
     }
+
+    public class DeckClass
+    {
+        public string slug { get; set; }
+        public int id { get; set; }
+        public string name { get; set; }
+    }
+
 
     public class Hero
     {
@@ -64,7 +73,8 @@ namespace HearthstoneSdk
 
         public HeroPower heroPower { get; set; }
 
-        // TODO: class
+        [JsonProperty("class")]
+        public DeckClass deckClass { get; set;}
 
         public List<Card> cards { get; set; }
     }
