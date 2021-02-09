@@ -10,7 +10,7 @@ namespace HearthstoneSdk
         public List<int> multiClassIds { get; set; }
         public int cardTypeId { get; set; }
         public int cardSetId { get; set; }
-        public int rarityId { get; set; }
+        public int? rarityId { get; set; }
         public string artistName { get; set; }
         public int health { get; set; }
         public int attack { get; set; }

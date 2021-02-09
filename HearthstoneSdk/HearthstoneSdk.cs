@@ -55,17 +55,6 @@ namespace HearthstoneSdk
 
             return token;
         }
-
-        //https://us.api.blizzard.com/hearthstone/cards?locale=en_US&access_token=USeYa4TlSBPfeS37Ri6z1wKIFyAcZY48Oh
-        public async Task<CardsCollection> GetCards(Region region,
-                                               Locale locale,
-                                               string accessToken)
-        {
-            string url = $"https://{region}.api.blizzard.com/hearthstone/cards?locale={locale}&access_token={accessToken}";
-            string response = await GetResponseBodyByUrl(url);
-            CardsCollection cardsCollection = JsonConvert.DeserializeObject<CardsCollection>(response);
-            return cardsCollection;           
-        }
         
         //https://us.api.blizzard.com/hearthstone/cards?locale=en_US&set=rise-of-shadows&class=mage&manaCost=10&attack=4&health=10&collectible=1&rarity=legendary&type=minion&minionType=dragon&keyword=battlecry&textFilter=kalecgos&gameMode=constructed&page=1&pageSize=5&sort=name&order=desc&access_token=USFIZOMpbbZo4NFI9UC6RiPnQvbYGyyT4F
         public async Task<CardsCollection> GetCards(Region region,
@@ -87,8 +76,132 @@ namespace HearthstoneSdk
                                                int pageSize = 10,
                                                string sort = "",
                                                string order = "")
+        {            
+            string url = $"https://{region}.api.blizzard.com/hearthstone/cards?locale={locale}";
+
+            if (!string.IsNullOrEmpty(set))
+            {
+                url += $"&set={set}";
+            }
+            if (!string.IsNullOrEmpty(classString))
+            {
+                url += $"&class={classString}";
+            }
+            if (manaCost != null)
+            {
+                var manaCostList = HttpUtility.UrlEncode(string.Join(",", manaCost));
+                url += $"&manaCost={manaCostList}";
+            }
+            if (attack != null)
+            {
+                var attackList = HttpUtility.UrlEncode(string.Join(",", attack));
+                url += $"&attack={attackList}";
+            }
+            if (health != null)
+            {
+                var healthList = HttpUtility.UrlEncode(string.Join(",", health));
+                url += $"&health={healthList}";
+            }
+            if (collectible != null)
+            {
+                var collectibleList = HttpUtility.UrlEncode(string.Join(",", collectible));
+                url += $"&collectible={collectibleList}";
+            }
+            if (!string.IsNullOrEmpty(rarity))
+            {
+                url += $"&rarity={rarity}";
+            }
+            if (!string.IsNullOrEmpty(typeString))
+            {
+                url += $"&type={typeString}";
+            }
+            if (!string.IsNullOrEmpty(minionType))
+            {
+                url += $"&minionType={minionType}";
+            }
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                url += $"&keyword={keyword}";
+            }
+            if (!string.IsNullOrEmpty(textFilter))
+            {
+                url += $"&textFilter={textFilter}";
+            }
+            url += $"&gameMode={mode}";
+            url += $"&page={page}";
+            url += $"&pageSize={pageSize}";
+            if (!string.IsNullOrEmpty(sort))
+            {
+                url += $"&sort={sort}";
+            }
+            if (!string.IsNullOrEmpty(order))
+            {
+                url += $"&order={order}";
+            }
+            url += $"&access_token={accessToken}";
+
+            string response = await GetResponseBodyByUrl(url);
+            CardsCollection cardsCollection = JsonConvert.DeserializeObject<CardsCollection>(response);
+            return cardsCollection;
+        }
+
+        public async Task<CardsCollection> GetBattlegroundCards(Region region,
+                                               Locale locale,
+                                               string accessToken,
+                                               List<string> tier,
+                                               List<int> attack = null,
+                                               List<int> health = null,                                              
+                                               string minionType = "",
+                                               string keyword = "",
+                                               string textFilter = "",                                               
+                                               int page = 1,
+                                               int pageSize = 10,
+                                               string sort = "",
+                                               string order = "")
         {
-            string url = $"https://{region}.api.blizzard.com/hearthstone/cards?locale={locale}&access_token={accessToken}";
+            string url = $"https://{region}.api.blizzard.com/hearthstone/cards?locale={locale}";
+
+            url += $"&gameMode=battlegrounds";
+
+            if (tier != null)
+            {
+                var tierList = HttpUtility.UrlEncode(string.Join(",", tier));
+                url += $"&tier={tierList}";
+            }
+            if (attack != null)
+            {
+                var attackList = HttpUtility.UrlEncode(string.Join(",", attack));
+                url += $"&attack={attackList}";
+            }
+            if (health != null)
+            {
+                var healthList = HttpUtility.UrlEncode(string.Join(",", health));
+                url += $"&health={healthList}";
+            }
+            if (!string.IsNullOrEmpty(minionType))
+            {
+                url += $"&minionType={minionType}";
+            }
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                url += $"&keyword={keyword}";
+            }
+            if (!string.IsNullOrEmpty(textFilter))
+            {
+                url += $"&textFilter={textFilter}";
+            }
+            url += $"&page={page}";
+            url += $"&pageSize={pageSize}";
+            if (!string.IsNullOrEmpty(sort))
+            {
+                url += $"&sort={sort}";
+            }
+            if (!string.IsNullOrEmpty(order))
+            {
+                url += $"&order={order}";
+            }
+            url += $"&access_token={accessToken}";
+
             string response = await GetResponseBodyByUrl(url);
             CardsCollection cardsCollection = JsonConvert.DeserializeObject<CardsCollection>(response);
             return cardsCollection;
@@ -169,7 +282,7 @@ namespace HearthstoneSdk
                                         int heroId,
                                         string accessToken)
         {
-            var cardsList = HttpUtility.UrlEncode(string.Join<int>(",", cardIds));
+            var cardsList = HttpUtility.UrlEncode(string.Join(",", cardIds));
             string url = $"https://{region}.api.blizzard.com/hearthstone/deck?locale={locale}&ids={cardsList}&hero={heroId}&access_token={accessToken}";
             string response = await GetResponseBodyByUrl(url);
             Deck card = JsonConvert.DeserializeObject<Deck>(response);

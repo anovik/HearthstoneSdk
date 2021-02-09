@@ -66,7 +66,12 @@ namespace HearthstoneSdkTests
         [Test]
         public async Task GetCardsBattlegroundSearchTest()
         {
-            //TODO: implement
+            var cardsCollection = await _sdk.GetBattlegroundCards(region: Region.eu,
+                                         locale: Locale.ru_RU,
+                                         accessToken: _accessToken,
+                                         tier: new List<string>() { "hero", "3" } );
+            Assert.IsNotNull(cardsCollection);
+            Assert.True(cardsCollection.cards.Count > 0);
         }
 
         [Test]
