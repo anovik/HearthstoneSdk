@@ -29,10 +29,10 @@ namespace HearthstoneSdk
 
             _client.DefaultRequestHeaders.Add("Authorization", "Basic " + 
                 Convert.ToBase64String(Encoding.GetEncoding("ISO-8859-1").GetBytes(clientId + ":" + clientSecret)));
-            
-            HttpResponseMessage response = await _client.PostAsync(
-                $"https://{region}.battle.net/oauth/token",
-                requestContent);
+
+            string url = region == Region.cn ? "https://www.battlenet.com.cn/oauth/token" : $"https://{region}.battle.net/oauth/token";
+
+            HttpResponseMessage response = await _client.PostAsync(url, requestContent);
 
             string token = null;
             HttpContent responseContent = response.Content;
@@ -77,7 +77,7 @@ namespace HearthstoneSdk
                                                string sort = "",
                                                string order = "")
         {            
-            string url = $"https://{region}.api.blizzard.com/hearthstone/cards?locale={locale}";
+            string url = $"https://{GetHostByRegion(region)}/hearthstone/cards?locale={locale}";
 
             if (!string.IsNullOrEmpty(set))
             {
@@ -159,7 +159,7 @@ namespace HearthstoneSdk
                                                string sort = "",
                                                string order = "")
         {
-            string url = $"https://{region}.api.blizzard.com/hearthstone/cards?locale={locale}";
+            string url = $"https://{GetHostByRegion(region)}/hearthstone/cards?locale={locale}";
 
             url += $"&gameMode=battlegrounds";
 
@@ -213,7 +213,7 @@ namespace HearthstoneSdk
                                             Locale locale,                                 
                                             string accessToken)
         {
-            string url = $"https://{region}.api.blizzard.com/hearthstone/cards/{idorslug}?locale={locale}&access_token={accessToken}";
+            string url = $"https://{GetHostByRegion(region)}/hearthstone/cards/{idorslug}?locale={locale}&access_token={accessToken}";
             string response = await GetResponseBodyByUrl(url);
             Card card = JsonConvert.DeserializeObject<Card>(response);
             return card;            
@@ -225,7 +225,7 @@ namespace HearthstoneSdk
                                            Locale locale,
                                            string accessToken)
         {
-            string url = $"https://{region}.api.blizzard.com/hearthstone/cardbacks/{idorslug}?locale={locale}&access_token={accessToken}";
+            string url = $"https://{GetHostByRegion(region)}/hearthstone/cardbacks/{idorslug}?locale={locale}&access_token={accessToken}";
             string response = await GetResponseBodyByUrl(url);
             CardBack cardBack = JsonConvert.DeserializeObject<CardBack>(response);
             return cardBack;
@@ -240,7 +240,7 @@ namespace HearthstoneSdk
                                           string order = ""
                                           )
         {
-            string url = $"https://{region}.api.blizzard.com/hearthstone/cardbacks?locale={locale}";
+            string url = $"https://{GetHostByRegion(region)}/hearthstone/cardbacks?locale={locale}";
             if (!string.IsNullOrEmpty(cardBackCategory))
             {
                 url += $"&cardBackCategory={cardBackCategory}";
@@ -269,7 +269,7 @@ namespace HearthstoneSdk
                                            string code,
                                            string accessToken)
         {
-            string url = $"https://{region}.api.blizzard.com/hearthstone/deck?locale={locale}&code={code}&access_token={accessToken}";
+            string url = $"https://{GetHostByRegion(region)}/hearthstone/deck?locale={locale}&code={code}&access_token={accessToken}";
             string response = await GetResponseBodyByUrl(url);
             Deck card = JsonConvert.DeserializeObject<Deck>(response);
             return card;
@@ -283,7 +283,7 @@ namespace HearthstoneSdk
                                         string accessToken)
         {
             var cardsList = HttpUtility.UrlEncode(string.Join(",", cardIds));
-            string url = $"https://{region}.api.blizzard.com/hearthstone/deck?locale={locale}&ids={cardsList}&hero={heroId}&access_token={accessToken}";
+            string url = $"https://{GetHostByRegion(region)}/hearthstone/deck?locale={locale}&ids={cardsList}&hero={heroId}&access_token={accessToken}";
             string response = await GetResponseBodyByUrl(url);
             Deck card = JsonConvert.DeserializeObject<Deck>(response);
             return card;
@@ -294,7 +294,7 @@ namespace HearthstoneSdk
                                               Locale locale, 
                                               string accessToken)
         {
-            string url = $"https://{region}.api.blizzard.com/hearthstone/metadata?locale={locale}&access_token={accessToken}";
+            string url = $"https://{GetHostByRegion(region)}/hearthstone/metadata?locale={locale}&access_token={accessToken}";
             string response = await GetResponseBodyByUrl(url);
             return response;
         }
@@ -305,7 +305,7 @@ namespace HearthstoneSdk
                                                     MetadataType type,
                                                     string accessToken)
         {
-            string url = $"https://{region}.api.blizzard.com/hearthstone/metadata/{type}?locale={locale}&access_token={accessToken}";
+            string url = $"https://{GetHostByRegion(region)}/hearthstone/metadata/{type}?locale={locale}&access_token={accessToken}";
             string response = await GetResponseBodyByUrl(url);
             return response;
         }
@@ -322,6 +322,16 @@ namespace HearthstoneSdk
                 string responseBody = await reader.ReadToEndAsync();
                 return responseBody;
             }
+        }
+
+        private string GetHostByRegion(Region region)
+        {
+            if (region == Region.cn)
+            {
+                // special host for China
+                return "gateway.battlenet.com.cn";
+            }
+            return $"{region}.api.blizzard.com";
         }
     }
 }
