@@ -6,6 +6,11 @@ https://develop.battle.net/documentation/hearthstone/game-data-apis
 
 The aim of current project is creating .NET 5 library allowing to get all this information easily.
 
+## Nuget
+
+You can add the library to your project using Nuget:
+
+https://www.nuget.org/packages/HearthstoneSdk/
 
 # Getting Started
 
