@@ -31,26 +31,35 @@ namespace HearthstoneSdk
                 Convert.ToBase64String(Encoding.GetEncoding("ISO-8859-1").GetBytes(clientId + ":" + clientSecret)));
 
             string url = region == Region.cn ? "https://www.battlenet.com.cn/oauth/token" : $"https://{region}.battle.net/oauth/token";
-
-            HttpResponseMessage response = await _client.PostAsync(url, requestContent);
-
             string token = null;
-            HttpContent responseContent = response.Content;
-
             try
             {
+                HttpResponseMessage response = await _client.PostAsync(url, requestContent);
+                
+                HttpContent responseContent = response.Content;
+
                 using (var reader = new StreamReader(await responseContent.ReadAsStreamAsync()))
                 {
                     string responseBody = await reader.ReadToEndAsync();
                     var dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(responseBody);
-                    // TODO: process possible errors here
-                    token = dict["access_token"];
+                    if (dict.ContainsKey("access_token"))
+                    {
+                        token = dict["access_token"];
+                    }
+                    else
+                    {
+                        throw new HearthstoneSdkException("Can't get access token, check your credentials.");
+                    }
                 }
+            }
+            catch(Exception ex)
+            {
+                throw new HearthstoneSdkException(ex.Message);
             }
             finally
             {
                 // anyway clear DefaultRequestHeaders
-                _client.DefaultRequestHeaders.Clear();                
+                _client.DefaultRequestHeaders.Clear();
             }
 
             return token;
@@ -311,16 +320,24 @@ namespace HearthstoneSdk
         }
 
         private async Task<string> GetResponseBodyByUrl(string url)
-        {            
-            
-            HttpResponseMessage response = await _client.GetAsync(url);
-
-            HttpContent responseContent = response.Content;
-            
-            using (var reader = new StreamReader(await responseContent.ReadAsStreamAsync()))
+        {
+            try
             {
-                string responseBody = await reader.ReadToEndAsync();
-                return responseBody;
+                HttpResponseMessage response = await _client.GetAsync(url);
+
+                HttpContent responseContent = response.Content;
+
+                using (var reader = new StreamReader(await responseContent.ReadAsStreamAsync()))
+                {
+                    string responseBody = await reader.ReadToEndAsync();
+                    return responseBody;
+                }
+            }
+            catch(Exception ex)
+            {
+                throw new HearthstoneSdkException(ex.Message);
+
+                return null;
             }
         }
 
