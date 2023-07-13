@@ -8,6 +8,8 @@
     <PackageProjectUrl>https://github.com/anovik/HearthstoneSdk</PackageProjectUrl>
     <Description>.NET 6 C# wrapper library for Hearthstone SDK. You can easily get all the information about cards, decks and metadata.</Description>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <Title>Hearthstone .NET 6 SDK</Title>
+	<Version>1.1.0.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
