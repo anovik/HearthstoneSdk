@@ -4,11 +4,11 @@ Blizzard provides APIs for getting various information about Hearthstone cards, 
 
 https://develop.battle.net/documentation/hearthstone/game-data-apis
 
-The aim of current project is creating .NET 6 library allowing to get all this information easily.
+The aim of the current project is to create .NET 6 library that allows to get all this information easily.
 
 ## Nuget
 
-You can add the library to your project using Nuget:
+You can add the library to your project using NuGet:
 
 https://www.nuget.org/packages/HearthstoneSdk/
 
@@ -16,7 +16,7 @@ https://www.nuget.org/packages/HearthstoneSdk/
 
 https://develop.battle.net/documentation/guides/getting-started
 
-To start working with Hearthstone API directly or through HearthstoneSdk you need to create Battle.net account and generate client id and client secret.
+To start working with Hearthstone API directly or through HearthstoneSdk you need to create a Battle.net account and generate a client id and client secret.
 
 To run HearthstoneSdkTests you need to insert your client id and client secret in the code:
 
