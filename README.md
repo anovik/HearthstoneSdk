@@ -4,7 +4,7 @@ Blizzard provides APIs for getting various information about Hearthstone cards, 
 
 https://develop.battle.net/documentation/hearthstone/game-data-apis
 
-The aim of current project is creating .NET 5 library allowing to get all this information easily.
+The aim of current project is creating .NET 6 library allowing to get all this information easily.
 
 ## Nuget
 
@@ -24,3 +24,7 @@ To run HearthstoneSdkTests you need to insert your client id and client secret i
 const string _clientId = "PUT_YOUR_CLIENT_ID_HERE";
 const string _clientSecret = "PUT_YOUR_CLIENT_SECRET_HERE";
 ```
+
+# Restrictions
+
+API clients are limited to 36,000 requests per hour at a rate of 100 requests per second. Exceeding the hourly quota results in slower service until traffic decreases. Exceeding the per-second limit results in a 429 error for the remainder of the second until the quota refreshes.

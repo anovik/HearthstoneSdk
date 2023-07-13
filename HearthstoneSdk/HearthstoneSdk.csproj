@@ -1,12 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <Authors>Anna Novikova</Authors>
     <Company />
-    <Copyright>@Anna Novikova, 2021</Copyright>
+    <Copyright>@Anna Novikova, 2021-2023</Copyright>
     <PackageProjectUrl>https://github.com/anovik/HearthstoneSdk</PackageProjectUrl>
-    <Description>.NET 5 C# wrapper library for Hearthstone SDK. You can easily get all the information about cards, decks and metadata.</Description>
+    <Description>.NET 6 C# wrapper library for Hearthstone SDK. You can easily get all the information about cards, decks and metadata.</Description>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
   </PropertyGroup>
 
